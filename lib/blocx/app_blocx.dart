@@ -11,6 +11,12 @@ class CityBloc extends Bloc<CityEvent, CityState>{
   CityBloc(this._cityRepositories) : super(CityLoadingState()){
     on<LoadCityEvent>((event, emit)async {
       emit(CityLoadingState());
+      try {
+        final cities = await _cityRepositories.getCity();
+        emit(CityLoadedState(cities));
+      } catch (e) {
+        emit(CityErrorState(e.toString()));
+      }
     } );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cities_list_blocx/blocx/app_blocx.dart';
 import 'package:cities_list_blocx/blocx/app_events.dart';
 import 'package:cities_list_blocx/blocx/app_state.dart';
+import 'package:cities_list_blocx/models/cities_model.dart';
 import 'package:cities_list_blocx/repos/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +46,30 @@ class Home extends StatelessWidget {
             if(state is CityLoadingState){
               return const Center(
                 child: CircularProgressIndicator(),
+              );
+            }
+            if (state is CityLoadedState) {
+              List<CityModel> cityList=state.cities;
+              return ListView.builder(
+                itemCount: cityList.length,
+                itemBuilder: (_, index){
+                  print(cityList[index].name);
+                  print('ye chala ha');
+                  return Card(
+                    color: Colors.black,
+                    elevation: 5,
+                    margin:const EdgeInsets.symmetric(vertical: 10),
+                    child: ListTile(
+                      title:Text(cityList[index].name, style:const TextStyle(color: Colors.black45),),
+                      subtitle: Text("${cityList[index].countid}"),
+                    ),
+                  );
+                },
+              );
+            }
+            if (state is CityErrorState) {
+              return Center(
+                child: Text('errorhappond'),
               );
             }
               return Container();
