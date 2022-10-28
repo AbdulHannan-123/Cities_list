@@ -1,4 +1,9 @@
+import 'package:cities_list_blocx/blocx/app_blocx.dart';
+import 'package:cities_list_blocx/blocx/app_events.dart';
+import 'package:cities_list_blocx/blocx/app_state.dart';
+import 'package:cities_list_blocx/repos/repositories.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -6,64 +11,49 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: RepositoryProvider(
+        create: (context) => CityRepositories(),
+        child: const Home(),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    return BlocProvider(
+      create: (context)=> CityBloc(
+        RepositoryProvider.of<CityRepositories>(context),
+      )..add(LoadCityEvent()), 
+      child: Scaffold(
+        appBar: AppBar(
+          title:const Text('Cities List'),
+        ),
+        body: BlocBuilder<CityBloc,CityState>(
+          builder: (context, state) {
+            if(state is CityLoadingState){
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+              return Container();
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+      );
   }
 }
+
+
+
