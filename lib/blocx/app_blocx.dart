@@ -12,7 +12,9 @@ class CityBloc extends Bloc<CityEvent, CityState>{
     on<LoadCityEvent>((event, emit)async {
       emit(CityLoadingState());
       try {
+        print('try start');
         final cities = await _cityRepositories.getCity();
+        print("values");
         emit(CityLoadedState(cities));
       } catch (e) {
         emit(CityErrorState(e.toString()));

@@ -49,6 +49,7 @@ class Home extends StatelessWidget {
               );
             }
             if (state is CityLoadedState) {
+              print('loaded is running');
               List<CityModel> cityList=state.cities;
               return ListView.builder(
                 itemCount: cityList.length,
