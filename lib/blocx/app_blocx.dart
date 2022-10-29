@@ -17,6 +17,7 @@ class CityBloc extends Bloc<CityEvent, CityState>{
         print("values");
         emit(CityLoadedState(cities));
       } catch (e) {
+        print(e);
         emit(CityErrorState(e.toString()));
       }
     } );
